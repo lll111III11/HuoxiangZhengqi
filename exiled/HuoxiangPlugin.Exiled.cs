@@ -17,6 +17,7 @@ using Exiled.API.Interfaces;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp914;
 using InventorySystem.Items;
+using HuoxiangZhengqi.Shared;
 using Scp914;
 using UnityEngine;
 using Locker = MapGeneration.Distributors.Locker;
@@ -83,7 +84,7 @@ namespace HuoxiangZhengqi.ExiledBuild
 
         public override string Name => "藿香正气水";
         public override string Author => "匿名作者";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 1, 1);
         public override Version RequiredExiledVersion => new Version(9, 0, 0);
         public override bool IgnoreRequiredVersionCheck => true;
 
@@ -216,7 +217,8 @@ namespace HuoxiangZhengqi.ExiledBuild
                 if (ev == null || !Config.Enabled || ev.Pickup == null) return;
                 if (!IsBottle(ev.Pickup.Serial)) return;
                 if (ev.Player != null && !string.IsNullOrEmpty(Config.PickupHint))
-                    ev.Player.ShowHint(Config.PickupHint, Clamp(Config.PickupHintSeconds, 0.5f, 30f));
+                    HintBridge.Show(ev.Player, ev.Player.ReferenceHub, Config.PickupHint,
+                        Clamp(Config.PickupHintSeconds, 0.5f, 30f), ev.Player.ShowHint);
             }
             catch (Exception e)
             {
@@ -258,7 +260,8 @@ namespace HuoxiangZhengqi.ExiledBuild
                 try { player.GetEffect<Spicy>().Intensity = ToByte(Config.SpicyIntensity); } catch { }
 
                 if (!string.IsNullOrEmpty(Config.DrinkHint))
-                    player.ShowHint(Config.DrinkHint, Clamp(Config.DrinkHintSeconds, 0.5f, 30f));
+                    HintBridge.Show(player, player.ReferenceHub, Config.DrinkHint,
+                        Clamp(Config.DrinkHintSeconds, 0.5f, 30f), player.ShowHint);
             }
             catch (Exception e)
             {

@@ -24,6 +24,7 @@ $refs = @('mscorlib','netstandard','System','System.Core','Assembly-CSharp','Lab
 $cscArgs = @($cscPath,'-noconfig','-nostdlib+','-target:library','-warn:4','-nowarn:CS0169,CS0219,CS0414',"-out:$out","-lib:$managed")
 foreach ($r in $refs) { $cscArgs += "-r:$r.dll" }
 $cscArgs += (Join-Path $root 'HuoxiangPlugin.cs')
+$cscArgs += (Join-Path $root 'HintBridge.cs')
 
 & dotnet @cscArgs
 if ($LASTEXITCODE -ne 0) { throw "compile failed (exit $LASTEXITCODE)" }

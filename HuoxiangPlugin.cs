@@ -39,6 +39,7 @@ using LabApi.Features;
 using LabApi.Features.Console;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
+using HuoxiangZhengqi.Shared;
 using MapGeneration.Distributors;
 using Scp914;
 using UnityEngine;
@@ -62,7 +63,7 @@ namespace HuoxiangZhengqi
             "SCP-914 粉可超精 / 储物柜 20% / UCP! 指令获取；拾取提示「这是什么」，喝下 Metal+Spicy",
             "Obtained via SCP-914 Anti-SCP-207 Very Fine / 20% lockers / UCP! command; pickup hint, then Metal+Spicy");
         public override string Author => "匿名作者";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 1, 1);
         public override Version RequiredApiVersion => LabApiProperties.CurrentVersion;
 
         public class PluginConfig
@@ -259,7 +260,8 @@ namespace HuoxiangZhengqi
                 if (ev == null || !Config.Enabled || ev.Item == null) return;
                 if (!IsBottle(ev.Item.Serial)) return;
                 if (ev.Player != null && !string.IsNullOrEmpty(Config.PickupHint))
-                    ev.Player.SendHint(Config.PickupHint, Clamp(Config.PickupHintSeconds, 0.5f, 30f));
+                    HintBridge.Show(ev.Player, ev.Player.ReferenceHub, Config.PickupHint,
+                        Clamp(Config.PickupHintSeconds, 0.5f, 30f), ev.Player.SendHint);
             }
             catch (Exception e)
             {
@@ -294,7 +296,8 @@ namespace HuoxiangZhengqi
                 }
 
                 if (!string.IsNullOrEmpty(Config.DrinkHint))
-                    player.SendHint(Config.DrinkHint, Clamp(Config.DrinkHintSeconds, 0.5f, 30f));
+                    HintBridge.Show(player, player.ReferenceHub, Config.DrinkHint,
+                        Clamp(Config.DrinkHintSeconds, 0.5f, 30f), player.SendHint);
             }
             catch (Exception e)
             {

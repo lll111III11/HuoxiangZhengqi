@@ -48,6 +48,7 @@ $cscArgs = @($cscPath,'-noconfig','-nostdlib+','-target:library','-warn:4','-now
   ("-out:" + $out), ("-lib:" + $managed), ("-lib:" + $exiledApi), ("-lib:" + $exiledPlugins))
 foreach ($r in $refs) { $cscArgs += ("-r:" + $r) }
 $cscArgs += (Join-Path $root 'HuoxiangPlugin.Exiled.cs')
+$cscArgs += (Join-Path (Split-Path $root -Parent) 'HintBridge.cs')
 
 & dotnet @cscArgs
 if ($LASTEXITCODE -ne 0) { throw "compile failed (exit $LASTEXITCODE)" }

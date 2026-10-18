@@ -32,6 +32,14 @@
 - 喝下后给予 **Metal 30 秒 + Spicy 30 秒**
 - 若当前游戏版本没有 `Metal` 效果，自动回退为 **Invigorated 30 秒 + FogControl 12 级 30 秒**
 
+### Hint 输出优先级
+
+1. **HintChorus**（本系列 Hint 框架）
+2. 社区 Hint 框架：**HintServiceMeow** → **RueI**
+3. 框架原生：LabAPI `SendHint` / EXILED `ShowHint`
+
+没装的框架会自动跳过，不会报错。
+
 ---
 
 ## 获取方式
