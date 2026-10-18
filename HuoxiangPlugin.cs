@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -61,6 +62,7 @@ namespace HuoxiangZhengqi
             "SCP-914 粉可超精 / 储物柜 20% / UCP! 指令获取；拾取提示「这是什么」，喝下 Metal+Spicy",
             "Obtained via SCP-914 Anti-SCP-207 Very Fine / 20% lockers / UCP! command; pickup hint, then Metal+Spicy");
         public override string Author => "匿名作者";
+        public override Version Version => new Version(1, 1, 0);
         public override Version RequiredApiVersion => LabApiProperties.CurrentVersion;
 
         public class PluginConfig
@@ -110,6 +112,15 @@ namespace HuoxiangZhengqi
 
         public override void Enable()
         {
+            // 双框架优先 EXILED: 如果 EXILED 版已加载，LabAPI 版自动让位
+            if (ExiledBuildLoaded())
+            {
+                Logger.Info(Lang.T(
+                    "[藿香正气水] 检测到 EXILED 版，LabAPI 版自动让位",
+                    "[HuoxiangZhengqi] EXILED build detected, LabAPI build stands down"));
+                return;
+            }
+
             Instance = this;
 
             // 语言/地区检测先跑: 后面的默认文案与日志都按结果取词
@@ -343,6 +354,21 @@ namespace HuoxiangZhengqi
         }
 
         // ==================== 工具 ====================
+
+        /// <summary>EXILED 版是否已加载(双框架时让位给对方)。</summary>
+        private static bool ExiledBuildLoaded()
+        {
+            try
+            {
+                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    if (string.Equals(assembly.GetName().Name, "HuoxiangZhengqi.Exiled", StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
+            catch { }
+            return false;
+        }
 
         // 单独方法 + NoInlining: 若当前游戏版本没有 Metal 效果，
         // 让 TypeLoad 发生在调用点而不是整个 OnUsedItem 的 JIT 阶段，便于回退。

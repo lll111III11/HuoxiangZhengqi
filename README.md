@@ -1,16 +1,20 @@
 # 藿香正气水 · Huoxiang Zhengqi Water
 
-> SCP:SL（SCP Secret Laboratory）LabAPI 整活插件 —— 一瓶会拉嗓子的“药”
+> SCP:SL（SCP Secret Laboratory）LabAPI / EXILED 整活插件 —— 一瓶会拉嗓子的“药”
 
-[![状态](https://img.shields.io/badge/status-Beta-orange)](#版本状态)
-[![平台](https://img.shields.io/badge/platform-SCP%3ASL%20LabAPI-blue)](#环境要求)
+[![状态](https://img.shields.io/badge/status-stable-brightgreen)](#版本状态)
+[![平台](https://img.shields.io/badge/platform-SCP%3ASL%20LabAPI%20%7C%20EXILED-blue)](#环境要求)
 [![授权](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
 
 ---
 
-## 版本状态：Beta
+## 版本状态
 
-> **非官方第三方插件，仍在测试中。** 欢迎反馈，但不建议直接用于正式服。
+> **非官方第三方插件。** 同时提供 **LabAPI** 与 **EXILED** 两个构建。
+
+- 两个 DLL 都安装时：**EXILED 版优先**，LabAPI 版自动让位，不会重复触发
+- 只装其中一个：正常单框架运行
+- 语言、物品、指令、配置完全一致
 
 ---
 
@@ -67,12 +71,14 @@ UCP! 2.3.4 3    给 2、3、4 号玩家各 3 瓶
 | 项目 | 要求 |
 |---|---|
 | 游戏 | SCP:SL 专用服务器（Dedicated Server） |
-| 框架 | LabAPI |
-| 依赖 | 无（不需要 Harmony 等额外 DLL） |
+| 框架 | LabAPI **或** EXILED（两者都装时优先 EXILED） |
+| 依赖 | 无（不需要额外 DLL） |
 
 ---
 
 ## 安装
+
+### LabAPI
 
 1. 下载 [`HuoxiangZhengqi.dll`](HuoxiangZhengqi.dll)
 2. 放进：
@@ -81,9 +87,21 @@ UCP! 2.3.4 3    给 2、3、4 号玩家各 3 瓶
    %APPDATA%\SCP Secret Laboratory\LabAPI\plugins\global\HuoxiangZhengqi.dll
    ```
 
+### EXILED
+
+1. 下载 [`HuoxiangZhengqi.Exiled.dll`](HuoxiangZhengqi.Exiled.dll)
+2. 放进：
+
+   ```
+   %APPDATA%\EXILED\Plugins\HuoxiangZhengqi.Exiled.dll
+   ```
+
 3. 重启服务器
 
-首次启动会自动生成 `configs\<端口>\藿香正气水\config.yml`。
+首次启动会自动生成配置文件：
+
+- LabAPI：`configs\<端口>\藿香正气水\config.yml`
+- EXILED：`EXILED\Configs\<端口>\藿香正气水\config.yml`
 
 启动日志应出现：
 
@@ -119,13 +137,24 @@ UCP! 2.3.4 3    给 2、3、4 号玩家各 3 瓶
 
 ## 构建
 
-需要 .NET SDK 与游戏本体托管程序集（`SCPSL_Data/Managed`）：
+需要 .NET SDK 与游戏本体托管程序集（`SCPSL_Data/Managed`）。
+
+LabAPI 版：
 
 ```
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-产物：`HuoxiangZhengqi.dll`
+EXILED 版（需要 `Exiled.API.dll` 与 `Exiled.Events.dll`）：
+
+```
+powershell -ExecutionPolicy Bypass -File exiled\build.ps1
+```
+
+产物：
+
+- `HuoxiangZhengqi.dll`
+- `HuoxiangZhengqi.Exiled.dll`
 
 ---
 
