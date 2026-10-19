@@ -1,25 +1,25 @@
 // ============================================================================
-//  藿香正气水 —— SCP:SL LabAPI 整活插件
+//  藿香正气水 —— SCP:SL LabAPI 整活插件 / Huoxiang Zhengqi Water — SCP:SL LabAPI fun plugin
 //
-//  获取方式:
-//    ① SCP-914 用「超精加工(VeryFine)」加工 反 SCP-207(粉可) → 藿香正气水
-//    ② 每回合开始，设施储存柜 20% 概率出现
-//    ③ 管理指令 UCP! 发放:
-//         UCP! 2.3.4        给 2、3、4 号玩家各 1 瓶
-//         UCP! 2 3          给 2 号玩家 3 瓶
-//         UCP! 2.3.4 3      给 2、3、4 号玩家各 3 瓶
+//  获取方式: / How to obtain:
+//    ① SCP-914 用「超精加工(VeryFine)」加工 反 SCP-207(粉可) → 藿香正气水 / 1) Process Anti-SCP-207 (Pink Candy) with SCP-914 on Very Fine -> Huoxiang Zhengqi Water
+//    ② 每回合开始，设施储存柜 20% 概率出现 / 2) 20% chance to appear in facility lockers at round start
+//    ③ 管理指令 UCP! 发放: / 3) Granted by admin command UCP!:
+//         UCP! 2.3.4        给 2、3、4 号玩家各 1 瓶 / 1 bottle each to players 2, 3, 4
+//         UCP! 2 3          给 2 号玩家 3 瓶 / 3 bottles to player 2
+//         UCP! 2.3.4 3      给 2、3、4 号玩家各 3 瓶 / 3 bottles each to players 2, 3, 4
 //
-//  行为:
-//    · 拾取时 Hint「这是什么」
-//    · 喝下后 Hint「你饮用了 藿香正气水! (拉嗓子!)」
-//      并给予 Metal 30 秒 + Spicy 30 秒
-//    · 若当前版本没有 Metal 效果 → 回退 Invigorated 30 秒 + FogControl 12 级 30 秒
+//  行为: / Behavior:
+//    · 拾取时 Hint「这是什么」 / Show hint "What is this?" on pickup
+//    · 喝下后 Hint「你饮用了 藿香正气水! (拉嗓子!)」 / Show hint "You drank Huoxiang Zhengqi Water! (Throat burn!)" after drinking
+//      并给予 Metal 30 秒 + Spicy 30 秒 / and apply Metal for 30s + Spicy for 30s
+//    · 若当前版本没有 Metal 效果 → 回退 Invigorated 30 秒 + FogControl 12 级 30 秒 / If the current game version has no Metal effect -> fall back to Invigorated 30s + FogControl level 12 for 30s
 //
-//  语言:
-//    · 按系统时区 + 公网 IP 自动检测: 中国区 → 中文，其它 → English
-//    · config.yml 的 language: auto|zh|en 可手动覆盖
+//  语言: / Language:
+//    · 按系统时区 + 公网 IP 自动检测: 中国区 → 中文，其它 → English / Auto-detect via system timezone + public IP: China region -> Chinese, otherwise -> English
+//    · config.yml 的 language: auto|zh|en 可手动覆盖 / Can be overridden via language: auto|zh|en in config.yml
 //
-//  载体: SCP-207(可乐)。插件用物品 Serial 表区分「藿香正气水」与普通可乐。
+//  载体: SCP-207(可乐)。插件用物品 Serial 表区分「藿香正气水」与普通可乐。 / Carrier: SCP-207 (Cola). The plugin uses an item serial set to tell Huoxiang Zhengqi Water apart from regular Cola.
 // ============================================================================
 using System;
 using System.Collections.Generic;
@@ -113,7 +113,7 @@ namespace HuoxiangZhengqi
 
         public override void Enable()
         {
-            // 双框架优先 EXILED: 如果 EXILED 版已加载，LabAPI 版自动让位
+            // 双框架优先 EXILED: 如果 EXILED 版已加载，LabAPI 版自动让位 / Dual-framework with EXILED priority: if the EXILED build is loaded, the LabAPI build stands down automatically
             if (ExiledBuildLoaded())
             {
                 Logger.Info(Lang.T(
@@ -124,7 +124,7 @@ namespace HuoxiangZhengqi
 
             Instance = this;
 
-            // 语言/地区检测先跑: 后面的默认文案与日志都按结果取词
+            // 语言/地区检测先跑: 后面的默认文案与日志都按结果取词 / Run language/region detection first: later default texts and logs pick their wording based on the result
             Lang.Initialize(Config.Language);
             if (Lang.ApplyTextDefaults(Config)) SaveConfig();
             Lang.LocalizeConfigFile(this);
@@ -166,7 +166,7 @@ namespace HuoxiangZhengqi
             Instance = null;
         }
 
-        // ==================== 物品登记 ====================
+        // ==================== 物品登记 / Item registration ====================
 
         internal static void Register(ushort serial)
         {
@@ -183,7 +183,7 @@ namespace HuoxiangZhengqi
             lock (Sync) Bottles.Remove(serial);
         }
 
-        /// <summary>给玩家发若干瓶；背包放不下就掉在脚下。返回实际发放数量。</summary>
+        /// <summary>给玩家发若干瓶；背包放不下就掉在脚下。返回实际发放数量。 / Give a player several bottles; if the inventory is full, drop them at their feet. Returns the actual amount given.</summary>
         internal static int Give(Player player, int count, ItemAddReason reason)
         {
             if (player == null || count <= 0) return 0;
@@ -213,7 +213,7 @@ namespace HuoxiangZhengqi
             return ok;
         }
 
-        // ==================== 事件 ====================
+        // ==================== 事件 / Events ====================
 
         private void OnRoundStarted()
         {
@@ -285,7 +285,7 @@ namespace HuoxiangZhengqi
 
                 float duration = Clamp(Config.EffectSeconds, 1f, 3600f);
 
-                // 首选 Metal + Spicy；Metal 不存在时回退 Invigorated + FogControl
+                // 首选 Metal + Spicy；Metal 不存在时回退 Invigorated + FogControl / Prefer Metal + Spicy; fall back to Invigorated + FogControl when Metal is unavailable
                 bool metalApplied = TryApplyMetal(player, ToByte(Config.MetalIntensity), duration);
                 player.EnableEffect<Spicy>(ToByte(Config.SpicyIntensity), duration);
 
@@ -316,7 +316,7 @@ namespace HuoxiangZhengqi
                 Player player = ev.Player;
                 if (player == null) return;
 
-                // 先把原版加工出来的东西拿走（可能是空的，也可能是另一瓶可乐），再换成藿香正气水
+                // 先把原版加工出来的东西拿走（可能是空的，也可能是另一瓶可乐），再换成藿香正气水 / First remove whatever vanilla processing produced (may be nothing or another Cola), then replace it with Huoxiang Zhengqi Water
                 if (ev.Item != null)
                 {
                     try { player.RemoveItem(ev.Item); } catch { }
@@ -356,9 +356,9 @@ namespace HuoxiangZhengqi
             }
         }
 
-        // ==================== 工具 ====================
+        // ==================== 工具 / Utilities ====================
 
-        /// <summary>EXILED 版是否已加载(双框架时让位给对方)。</summary>
+        /// <summary>EXILED 版是否已加载(双框架时让位给对方)。 / Whether the EXILED build is already loaded (stand down to it in dual-framework setups).</summary>
         private static bool ExiledBuildLoaded()
         {
             try
@@ -373,8 +373,8 @@ namespace HuoxiangZhengqi
             return false;
         }
 
-        // 单独方法 + NoInlining: 若当前游戏版本没有 Metal 效果，
-        // 让 TypeLoad 发生在调用点而不是整个 OnUsedItem 的 JIT 阶段，便于回退。
+        // 单独方法 + NoInlining: 若当前游戏版本没有 Metal 效果， / Separate method + NoInlining: if the current game version has no Metal effect,
+        // 让 TypeLoad 发生在调用点而不是整个 OnUsedItem 的 JIT 阶段，便于回退。 / make TypeLoad happen at the call site instead of during JIT of all of OnUsedItem, keeping the fallback possible.
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool TryApplyMetal(Player player, byte intensity, float duration)
         {
@@ -404,7 +404,7 @@ namespace HuoxiangZhengqi
         }
     }
 
-    /// <summary>UCP! —— 发放藿香正气水。</summary>
+    /// <summary>UCP! —— 发放藿香正气水。 / UCP! — grants Huoxiang Zhengqi Water.</summary>
     public class UcpCommand : ICommand
     {
         public string Command => "UCP!";
@@ -466,7 +466,7 @@ namespace HuoxiangZhengqi
         }
     }
 
-    /// <summary>语言与地区自动检测(时区 + 公网 IP)，以及配置文案切换。</summary>
+    /// <summary>语言与地区自动检测(时区 + 公网 IP)，以及配置文案切换。 / Language and region auto-detection (timezone + public IP), plus config text switching.</summary>
     internal static class Lang
     {
         public static bool Chinese { get; private set; } = true;
@@ -495,7 +495,7 @@ namespace HuoxiangZhengqi
                 return;
             }
 
-            // auto(以及无法识别的值): 时区优先给出离线结果，有网络再用公网 IP 复核
+            // auto(以及无法识别的值): 时区优先给出离线结果，有网络再用公网 IP 复核 / auto (and unrecognized values): the timezone gives an offline result first; re-check with the public IP when the network is available
             bool tzChina = IsChinaZone();
             string country = TryGetCountryCode();
             if (country != null)
@@ -564,13 +564,13 @@ namespace HuoxiangZhengqi
                 }
                 catch
                 {
-                    // 无网络/超时 → 试下一个，最终回退时区判定
+                    // 无网络/超时 → 试下一个，最终回退时区判定 / No network / timeout -> try the next one, ultimately falling back to the timezone check
                 }
             }
             return null;
         }
 
-        /// <summary>把仍是内置默认值的提示文案换成当前语言；返回是否有改动。</summary>
+        /// <summary>把仍是内置默认值的提示文案换成当前语言；返回是否有改动。 / Replace hint texts that are still built-in defaults with the current language; returns whether anything changed.</summary>
         public static bool ApplyTextDefaults(HuoxiangPlugin.PluginConfig c)
         {
             if (c == null) return false;
@@ -595,7 +595,7 @@ namespace HuoxiangZhengqi
             return value;
         }
 
-        /// <summary>config.yml 注释中英对照（LabAPI 生成的是 [Description] 原文）。</summary>
+        /// <summary>config.yml 注释中英对照（LabAPI 生成的是 [Description] 原文）。 / Chinese-English mapping for config.yml comments (LabAPI generates the raw [Description] text).</summary>
         private static readonly Dictionary<string, string> Comments = new Dictionary<string, string>
         {
             { "界面语言: auto=按地区自动检测(时区+公网IP) / zh=中文 / en=English (默认 auto)",
@@ -662,7 +662,7 @@ namespace HuoxiangZhengqi
             }
             catch
             {
-                // 注释翻译失败不影响插件运行
+                // 注释翻译失败不影响插件运行 / A failed comment translation does not affect plugin operation
             }
         }
     }

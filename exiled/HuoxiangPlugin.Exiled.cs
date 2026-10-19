@@ -1,6 +1,6 @@
 // ============================================================================
-//  藿香正气水 —— EXILED 版 (社区框架)
-//  与 LabAPI 版功能一致；两个 DLL 同时安装时，EXILED 版优先，LabAPI 版自动让位。
+//  藿香正气水 —— EXILED 版 (社区框架) / Huoxiang Zhengqi Water — EXILED build (community framework)
+//  与 LabAPI 版功能一致；两个 DLL 同时安装时，EXILED 版优先，LabAPI 版自动让位。 / Same features as the LabAPI build; when both DLLs are installed, the EXILED build has priority and the LabAPI build stands down.
 // ============================================================================
 using System;
 using System.Collections.Generic;
@@ -123,7 +123,7 @@ namespace HuoxiangZhengqi.ExiledBuild
             Instance = null;
         }
 
-        // ==================== 物品登记 ====================
+        // ==================== 物品登记 / Item registration ====================
 
         internal static void Register(ushort serial)
         {
@@ -175,7 +175,7 @@ namespace HuoxiangZhengqi.ExiledBuild
             Register(pickup.Serial);
         }
 
-        // ==================== 事件 ====================
+        // ==================== 事件 / Events ====================
 
         private void OnRoundStarted()
         {
@@ -253,7 +253,7 @@ namespace HuoxiangZhengqi.ExiledBuild
                 }
                 else
                 {
-                    // Metal 强度只能显式设置
+                    // Metal 强度只能显式设置 / Metal intensity can only be set explicitly
                     try { player.GetEffect<Metal>().Intensity = ToByte(Config.MetalIntensity); } catch { }
                 }
 
@@ -280,7 +280,7 @@ namespace HuoxiangZhengqi.ExiledBuild
                 Player player = ev.Player;
                 if (player == null) return;
 
-                // 取消原版加工 → 拿走粉可 → 发一瓶藿香正气水
+                // 取消原版加工 → 拿走粉可 → 发一瓶藿香正气水 / Cancel vanilla processing -> take away the Pink Candy -> give one Huoxiang Zhengqi Water
                 ev.IsAllowed = false;
                 try { player.RemoveItem(ev.Item); } catch { }
                 Give(player, 1);
@@ -310,7 +310,7 @@ namespace HuoxiangZhengqi.ExiledBuild
             }
         }
 
-        // ==================== 工具 ====================
+        // ==================== 工具 / Utilities ====================
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool TryApplyMetal(Player player, float duration)
@@ -326,7 +326,7 @@ namespace HuoxiangZhengqi.ExiledBuild
             }
         }
 
-        /// <summary>EXILED 优先: 若 LabAPI 版还开着，主动让它关闭。</summary>
+        /// <summary>EXILED 优先: 若 LabAPI 版还开着，主动让它关闭。 / EXILED priority: if the LabAPI build is still enabled, actively disable it.</summary>
         private static void TryDisableLabApiBuild()
         {
             try
@@ -421,7 +421,7 @@ namespace HuoxiangZhengqi.ExiledBuild
         }
     }
 
-    /// <summary>语言与地区自动检测(时区 + 公网 IP)，以及配置文案切换。</summary>
+    /// <summary>语言与地区自动检测(时区 + 公网 IP)，以及配置文案切换。 / Language and region auto-detection (timezone + public IP), plus config text switching.</summary>
     internal static class Lang
     {
         public static bool Chinese { get; private set; } = true;
@@ -518,7 +518,7 @@ namespace HuoxiangZhengqi.ExiledBuild
                 }
                 catch
                 {
-                    // 无网络/超时 → 试下一个，最终回退时区判定
+                    // 无网络/超时 → 试下一个，最终回退时区判定 / No network / timeout -> try the next one, ultimately falling back to the timezone check
                 }
             }
             return null;
@@ -610,7 +610,7 @@ namespace HuoxiangZhengqi.ExiledBuild
             }
             catch
             {
-                // 注释翻译失败不影响插件运行
+                // 注释翻译失败不影响插件运行 / A failed comment translation does not affect plugin operation
             }
         }
     }

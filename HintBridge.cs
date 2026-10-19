@@ -1,10 +1,10 @@
 // ============================================================================
-//  藿香正气水 —— Hint 输出适配层（LabAPI / EXILED 共用）
-//  优先级:
-//    1. HintChorus（我们自己的 Hint 框架）→ ShowTransient
-//    2. 社区 Hint 框架: HintServiceMeow → RueI
-//    3. 框架原生: LabAPI Player.SendHint / EXILED Player.ShowHint
-//  全部通过反射探测，没装就自动跳过，不会因为缺依赖报错。
+//  藿香正气水 —— Hint 输出适配层（LabAPI / EXILED 共用） / Huoxiang Zhengqi Water — Hint output adapter layer (shared by LabAPI / EXILED)
+//  优先级: / Priority:
+//    1. HintChorus（我们自己的 Hint 框架）→ ShowTransient / 1. HintChorus (our own hint framework) -> ShowTransient
+//    2. 社区 Hint 框架: HintServiceMeow → RueI / 2. Community hint frameworks: HintServiceMeow -> RueI
+//    3. 框架原生: LabAPI Player.SendHint / EXILED Player.ShowHint / 3. Framework-native: LabAPI Player.SendHint / EXILED Player.ShowHint
+//  全部通过反射探测，没装就自动跳过，不会因为缺依赖报错。 / Everything is probed via reflection; missing frameworks are skipped automatically, so no errors from missing dependencies.
 // ============================================================================
 using System;
 using System.Reflection;
@@ -31,8 +31,8 @@ namespace HuoxiangZhengqi.Shared
         private static ConstructorInfo _rueCtor;
 
         /// <summary>
-        /// 按优先级显示一条 Hint。
-        /// native 为当前框架的原生显示方法: LabAPI = SendHint, EXILED = ShowHint。
+        /// 按优先级显示一条 Hint。 / Show a hint following the priority order.
+        /// native 为当前框架的原生显示方法: LabAPI = SendHint, EXILED = ShowHint。 / native is the current framework's native display method: LabAPI = SendHint, EXILED = ShowHint.
         /// </summary>
         public static void Show(object player, ReferenceHub hub, string text, float seconds, Action<string, float> native)
         {
@@ -158,7 +158,7 @@ namespace HuoxiangZhengqi.Shared
             return true;
         }
 
-        // ==================== 工具 ====================
+        // ==================== 工具 / Utilities ====================
 
         private static MethodInfo FindPlayerMethod(Type type, string name, object player)
         {
