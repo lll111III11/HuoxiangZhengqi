@@ -1,44 +1,56 @@
 # 藿香正气水 · Huoxiang Zhengqi Water
 
 > SCP:SL（SCP Secret Laboratory）LabAPI / EXILED 整活插件 —— 一瓶会拉嗓子的“药”
+> (A fun SCP:SL LabAPI / EXILED plugin — a "medicine" that burns your throat.)
 
-[![状态](https://img.shields.io/badge/status-stable-brightgreen)](#版本状态)
+[![状态](https://img.shields.io/badge/status-stable-brightgreen)](#版本状态-version-status)
 [![平台](https://img.shields.io/badge/platform-SCP%3ASL%20LabAPI%20%7C%20EXILED-blue)](#环境要求)
 [![授权](https://img.shields.io/badge/license-CC0--1.0-lightgrey)](LICENSE)
 
 ---
 
-## 版本状态
+## 版本状态 (Version Status)
 
 > **非官方第三方插件。** 同时提供 **LabAPI** 与 **EXILED** 两个构建。
+> (**Unofficial third-party plugin.** Ships two builds: **LabAPI** and **EXILED**.)
 
 - 两个 DLL 都安装时：**EXILED 版优先**，LabAPI 版自动让位，不会重复触发
+  (When both DLLs are installed, **the EXILED build takes priority** and the LabAPI build stands down, so nothing fires twice.)
 - 只装其中一个：正常单框架运行
+  (With only one installed, it runs on that framework alone.)
 - 语言、物品、指令、配置完全一致
+  (Language, items, commands and config are identical across both builds.)
 
 ---
 
-## 这是什么
+## 这是什么 (What is this)
 
 藿香正气水是挂在 **SCP-207（可乐）** 载体上的自定义物品，插件用物品 Serial 表把它和普通可乐区分开。
+(Huoxiang Zhengqi Water is a custom item carried on **SCP-207 (cola)**; the plugin uses an item-serial table to tell it apart from ordinary cola.)
 
 - 拾取时屏幕 Hint：**这是什么**
+  (Pickup hint: **"What is this?"**)
 - 喝下时屏幕 Hint：
+  (Hint shown when drunk:)
   ```
   你饮用了
   藿香正气水!
   (拉嗓子!)
   ```
+  (You drank / Huoxiang Zhengqi Water! / (Throat burn!))
 - 喝下后给予 **Metal 30 秒 + Spicy 30 秒**
+  (On drinking: **Metal for 30 s + Spicy for 30 s**.)
 - 若当前游戏版本没有 `Metal` 效果，自动回退为 **Invigorated 30 秒 + FogControl 12 级 30 秒**
+  (If the current game version has no `Metal` effect, it falls back to **Invigorated 30 s + FogControl level 12 for 30 s**.)
 
-### Hint 输出优先级
+### Hint 输出优先级 (Hint Output Priority)
 
-1. **HintChorus**（本系列 Hint 框架）
-2. 社区 Hint 框架：**HintServiceMeow** → **RueI**
-3. 框架原生：LabAPI `SendHint` / EXILED `ShowHint`
+1. **HintChorus**（本系列 Hint 框架 / this series' hint framework）
+2. 社区 Hint 框架 (community hint frameworks)：**HintServiceMeow** → **RueI**
+3. 框架原生 (framework native)：LabAPI `SendHint` / EXILED `ShowHint`
 
 没装的框架会自动跳过，不会报错。
+(Missing frameworks are skipped automatically without errors.)
 
 ---
 
